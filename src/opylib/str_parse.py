@@ -1,10 +1,13 @@
 from typing import List
 
 
-def getattr_multi_level(obj, name: str):
+def get_attr_multi_level(obj, name: str):
     """
-    Iterates through the name to get the target attribute starting at
-    obj. Can go down multiple levels to get the attribute
+    Returns the attribute 'name' from obj. Support attributes of attributes
+    separated by '.' So if you have a top level class MyClass which has a
+    subclass Sub1 and that one has a subclass Sub2 and that has an attribute
+    address you could access it with
+    get_attr_multi_level(MyClass, 'Sub1.Sub2.address')
     :param obj: The base object to get name from
     :param name: The name of desired attribute (can be multiple levels deep)
     :return: The desired attribute
