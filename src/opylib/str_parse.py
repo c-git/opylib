@@ -98,12 +98,3 @@ def dsv_line_to_list(line: str, *, delimiter=',', quote='"') -> List[str]:
     result.append(field)
 
     return result
-
-
-if __name__ == '__main__':
-    print(dsv_line_to_list('a,b,c'))
-    print(dsv_line_to_list('a,b,c,'))
-    print(dsv_line_to_list('a,,c'))
-    print(dsv_line_to_list('a,"b",c'))
-    print(dsv_line_to_list('a,"b,e",c'))
-    print(dsv_line_to_list('a,"b,e"more",c'))
