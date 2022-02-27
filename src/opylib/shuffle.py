@@ -16,13 +16,3 @@ def shuffle(*iterables):
     join = list(zip(*iterables))
     random.shuffle(join)
     return zip(*join)
-
-
-if __name__ == '__main__':
-    a = [1, 2, 3, 4, 5, 6]  # Note that 6 goes missing as it is extra
-    b = ['a', 'b', 'c', 'd', 'e']
-    c = ['A', 'B', 'C', 'D', 'E']
-    a, b, c = shuffle(a, b, c)
-    print(a)
-    print(b)
-    print(c)
