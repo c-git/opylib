@@ -24,12 +24,18 @@ def log_exception(err: Exception):
 
 
 def setup_log(filename=None, *, only_std_out=False,
+              fmt_std_out='%(asctime)s %(levelname)s: %(message)s',
+              fmt_file='%(asctime)s %(levelname)s: %(message)s',
+              fmt_err='%(asctime)s %(levelname)s: %(message)s',
               error_notification_callback: callable = None):
     """
     Setups up logging handlers. Only needs to be called once
 
     :param filename: The file to save logs to
     :param only_std_out: If True does not log to file
+    :param fmt_std_out: Format to use for Standard Out
+    :param fmt_file: Format to use for file logging
+    :param fmt_err: Format to use for Errors
     :param error_notification_callback: Called at the end of execution if
     there were errors
     :return:
@@ -48,22 +54,21 @@ def setup_log(filename=None, *, only_std_out=False,
         # Set up a file handler
         file_handler = logging.FileHandler(filename)
         file_handler.setFormatter(
-            logging.Formatter(
-                '%(asctime)s %(message)s'))
+            logging.Formatter(fmt_file))
         file_handler.setLevel(logging.DEBUG)
         _logger.addHandler(file_handler)
 
     # Set up standard output
     std_stream_handler = logging.StreamHandler(sys.stdout)
     std_stream_handler.setFormatter(
-        logging.Formatter('%(asctime)s %(levelname)s: %(message)s'))
+        logging.Formatter(fmt_std_out))
     std_stream_handler.setLevel(logging.DEBUG)
     _logger.addHandler(std_stream_handler)
 
     # Set up error output
     err_stream_handler = logging.StreamHandler(sys.stderr)
     err_stream_handler.setFormatter(
-        logging.Formatter('%(asctime)s %(levelname)s: %(message)s'))
+        logging.Formatter(fmt_err))
     err_stream_handler.setLevel(logging.ERROR)
     _logger.addHandler(err_stream_handler)
 
