@@ -1,11 +1,17 @@
 import atexit
 import logging
+import os.path
 import sys
 from datetime import datetime
 
 from opylib.files_folders import mkdir
 
 _logger = logging.getLogger()
+
+# Store directory where log was created.
+# Needs to be converted to absolute path in setup in case working directory
+# changes during execution. Used later for location to create file for errors
+_log_dir: str = 'log/'
 
 
 def log(msg, log_level=None):
@@ -40,16 +46,18 @@ def setup_log(filename=None, *, only_std_out=False,
     there were errors
     :return:
     """
-    global _logger
+    global _logger, _log_dir
 
     if _logger.hasHandlers():
         log(f'{"!" * 20} REUSING LOG {"!" * 92}')
         return
 
     if filename is None:
-        mkdir('log')
-        filename = f'log/run {datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.log'
+        filename = \
+            f'{_log_dir}run {datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.log'
+    _log_dir = os.path.abspath(os.path.dirname(filename))
 
+    mkdir(_log_dir)
     if not only_std_out:
         # Set up a file handler
         file_handler = logging.FileHandler(filename)
@@ -124,7 +132,7 @@ class _ErrorsStats:
 
 def _register_special_error_logger():
     global _logger
-    error_handler = logging.FileHandler('log/ERRORS.log')
+    error_handler = logging.FileHandler(os.path.join(_log_dir, 'ERRORS.log'))
     error_handler.setFormatter(
         logging.Formatter('%(asctime)s %(message)s'))
     error_handler.setLevel(logging.ERROR)
