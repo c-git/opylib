@@ -28,6 +28,7 @@ class Test(TestCase):
         self.assertTrue(os.path.exists(log_dir))
 
         # Create new directory and change it to be the current working dir
+        org_dir = os.getcwd()
         new_dir = os.path.join(log_dir, 'other_dir/')
         mkdir(new_dir)
         os.chdir(new_dir)
@@ -39,4 +40,5 @@ class Test(TestCase):
         self.assertTrue(os.path.exists(os.path.join(log_dir, 'ERRORS.log')))
 
         # Remove directory used for testing
+        os.chdir(org_dir)  # Restore original directory before deleting
         shutil.rmtree(log_dir)
