@@ -123,7 +123,8 @@ class _ErrorsStats:
 
     @classmethod
     def notify_err(cls):
-        pass
+        from opylib import notify
+        notify.notify_err()
 
     @classmethod
     def register_notification_callback(cls, callback):

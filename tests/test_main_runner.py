@@ -18,7 +18,7 @@ def test_main_with_exception():
 class Test(TestCase):
     def test_main_runner(self):
         with self.assertLogs():
-            main_runner(test_main)
+            main_runner(test_main, should_complete_notify=False)
         if TestsConfig.get_instance().no_skip:
             with self.assertLogs(level=logging.ERROR):
                 main_runner(test_main_with_exception)
