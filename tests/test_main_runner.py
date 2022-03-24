@@ -3,6 +3,7 @@ from unittest import TestCase
 
 from opylib.log import log
 from opylib.main_runner import main_runner
+from tests.config_tests import TestsConfig
 
 
 def test_main():
@@ -18,5 +19,6 @@ class Test(TestCase):
     def test_main_runner(self):
         with self.assertLogs():
             main_runner(test_main)
-        with self.assertLogs(level=logging.ERROR):
-            main_runner(test_main_with_exception)
+        if TestsConfig.get_instance().no_skip:
+            with self.assertLogs(level=logging.ERROR):
+                main_runner(test_main_with_exception)
