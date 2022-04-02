@@ -13,11 +13,11 @@ def mean(curr_avg: float, n: int, new_value: float) -> float:
     uses constant space for calculations and doesn't overflow a sum counter.
     Gives the exact value not an approximation.
 
-    NB: If first value is being added set current average to 0 (any value works)
+    NB: Value of curr_avg doesn't matter for first call as long as n is set
+    to 0 for first call
 
     :param curr_avg: The current average value
-    :param n: The number of values that have been summed so far (before the
-        new one, should be 0 for first value)
+    :param n: The number of values that have been summed so far
     :param new_value: The value to be added to the average
     :return: The newly updated average value
     """
