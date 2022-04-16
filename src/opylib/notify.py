@@ -45,22 +45,22 @@ elif sys.platform.startswith('win') or sys.platform.startswith('cygwin'):
     import winsound
 
 
-    def make_sound(_):
+    def make_sound(_=None):
         for i in range(1, 5):
             winsound.Beep(i * 400, 200)
         for i in range(5, 1, -1):
             winsound.Beep(i * 400, 200)
 
 
-    def notify_err(_):
+    def notify_err(_=None):
         for i in range(2):
             winsound.Beep(2000, 500)
             winsound.Beep(400, 200)
 else:
-    def make_sound(_):
+    def make_sound(_=None):
         log(Exception(f'No Sound because unexpected OS: {sys.platform}'),
             logging.WARN)
 
 
-    def notify_err(_):
+    def notify_err(_=None):
         make_sound()
