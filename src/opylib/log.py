@@ -57,8 +57,8 @@ def setup_log(filename=None, *, only_std_out=False,
             f'{_log_dir}run {datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.log'
     _log_dir = os.path.abspath(os.path.dirname(filename))
 
-    mkdir(_log_dir)
     if not only_std_out:
+        mkdir(_log_dir)
         # Set up a file handler
         file_handler = logging.FileHandler(filename)
         file_handler.setFormatter(
