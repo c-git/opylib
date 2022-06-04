@@ -8,11 +8,6 @@ from opylib.files_folders import mkdir
 
 _logger = logging.getLogger()
 
-# Store directory where log was created.
-# Needs to be converted to absolute path in setup in case working directory
-# changes during execution. Used later for location to create file for errors
-_log_dir: str = 'log/'
-
 
 def log(msg, log_level=None):
     global _logger
@@ -33,20 +28,27 @@ def setup_log(filename=None, *, only_std_out=False,
               fmt_std_out='%(asctime)s %(levelname)s: %(message)s',
               fmt_file='%(asctime)s %(levelname)s: %(message)s',
               fmt_err='%(asctime)s %(levelname)s: %(message)s',
-              error_notification_callback: callable = None):
+              error_notification_callback: callable = None,
+              error_filename='log/ERRORS.log',
+              fmt_err_file='%(asctime)s %(message)s'):
     """
-    Setups up logging handlers. Only needs to be called once
+    Setups up logging handlers. Only needs to be called once. Should not
+    register new handlers if handlers are already registered. If they are
+    already registered should just emit a log message to confirm it tried to
+    run.
 
-    :param filename: The file to save logs to
+    :param filename: The file to save logs to. Not used if only_std_out is True
     :param only_std_out: If True does not log to file
     :param fmt_std_out: Format to use for Standard Out
     :param fmt_file: Format to use for file logging
     :param fmt_err: Format to use for Errors
     :param error_notification_callback: Called at the end of execution if
-    there were errors
-    :return:
+        there were errors
+    :param error_filename: The file name to be used to store errors. Not used
+        if only_std_out is True
+    :param fmt_err_file: The format for errors written to a file only for errors
     """
-    global _logger, _log_dir
+    global _logger
 
     if _logger.hasHandlers():
         log(f'{"!" * 20} REUSING LOG {"!" * 92}')
@@ -54,17 +56,14 @@ def setup_log(filename=None, *, only_std_out=False,
 
     if filename is None:
         filename = \
-            f'{_log_dir}run {datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.log'
-    _log_dir = os.path.abspath(os.path.dirname(filename))
+            f'log/run {datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.log'
 
     if not only_std_out:
-        mkdir(_log_dir)
-        # Set up a file handler
-        file_handler = logging.FileHandler(filename)
-        file_handler.setFormatter(
-            logging.Formatter(fmt_file))
-        file_handler.setLevel(logging.DEBUG)
-        _logger.addHandler(file_handler)
+        # Set up a file handler for normal logs
+        _register_file_logger(filename, fmt_file, logging.DEBUG)
+
+        # Setup a file handler for error logs
+        _register_file_logger(error_filename, fmt_err_file, logging.ERROR)
 
     # Set up standard output
     std_stream_handler = logging.StreamHandler(sys.stdout)
@@ -112,9 +111,6 @@ class _ErrorsStats:
 
     @classmethod
     def register_error_occurrence(cls):
-        # add new logger if first error
-        if not cls.has_occurred():
-            _register_special_error_logger()
         cls.COUNT += 1
 
     @classmethod
@@ -131,10 +127,11 @@ class _ErrorsStats:
         cls.notify_err = callback
 
 
-def _register_special_error_logger():
+def _register_file_logger(fn: str, fmt: str, log_level):
     global _logger
-    error_handler = logging.FileHandler(os.path.join(_log_dir, 'ERRORS.log'))
-    error_handler.setFormatter(
-        logging.Formatter('%(asctime)s %(message)s'))
-    error_handler.setLevel(logging.ERROR)
-    _logger.addHandler(error_handler)
+    log_dir = os.path.dirname(fn)
+    mkdir(log_dir)
+    file_handler = logging.FileHandler(fn)
+    file_handler.setFormatter(logging.Formatter(fmt))
+    file_handler.setLevel(log_level)
+    _logger.addHandler(file_handler)
