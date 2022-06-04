@@ -8,6 +8,14 @@ from tests.config_tests import TestsConfig
 
 
 class Test(TestCase):
+    def assert_exists(self, fn: str):
+        self.assertTrue(os.path.exists(fn),
+                        msg=f'"{os.path.abspath(fn)}" expected to exist')
+
+    def assert_not_exists(self, fn: str):
+        self.assertFalse(os.path.exists(fn),
+                         msg=f'"{os.path.abspath(fn)}" should NOT exist')
+
     def test_setup_log_and_change_dir(self):
         # Test to confirm that error file is created in the correct place even
         # if the working directory gets changed during execution
@@ -16,16 +24,27 @@ class Test(TestCase):
             return
 
         # Setup Logging
-        log_fn = 'testLog/logfile.log'
-        setup_log(log_fn)
+        base_log_test_dir = 'testLog/'
+        log_fn = base_log_test_dir + 'logfile.log'
+        err_log_fn = base_log_test_dir + 'eTestLog/ERRORS.log'
 
-        # Ensure log file created
-        self.assertTrue(os.path.exists(log_fn))
+        # Ensure log files do not already exist
+        self.assert_not_exists(log_fn)
+        self.assert_not_exists(err_log_fn)
+
+        setup_log(log_fn, error_filename=err_log_fn)
+
+        # Ensure log files are created
+        self.assert_exists(log_fn)
+        self.assert_exists(err_log_fn)
 
         # Get absolute path and ensure the folder part is valid
         log_fn = os.path.abspath(log_fn)
         log_dir = os.path.dirname(log_fn)
         self.assertTrue(os.path.exists(log_dir))
+        err_log_fn = os.path.abspath(err_log_fn)
+        err_log_dir = os.path.dirname(log_fn)
+        self.assertTrue(os.path.exists(err_log_dir))
 
         # Create new directory and change it to be the current working dir
         org_dir = os.getcwd()
@@ -34,10 +53,9 @@ class Test(TestCase):
         os.chdir(new_dir)
 
         # Register an exception to create the error logger
+        self.assertEqual(os.path.getsize(err_log_fn), 0)  # Ensure log empty
         log_exception(Exception('NOT AN ERROR PART OF TESTS'))
-
-        # Ensure the log file was still created in the correct place
-        self.assertTrue(os.path.exists(os.path.join(log_dir, 'ERRORS.log')))
+        self.assertNotEqual(os.path.getsize(err_log_fn), 0)  # Ensure log grew
 
         # Remove directory used for testing
         os.chdir(org_dir)  # Restore original directory before deleting
