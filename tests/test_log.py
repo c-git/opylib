@@ -1,5 +1,6 @@
 import os
 import shutil
+from typing import Tuple
 from unittest import TestCase
 
 from opylib.files_folders import mkdir
@@ -23,16 +24,7 @@ class Test(TestCase):
         if not TestsConfig.get_instance().no_skip:
             return
 
-        # Setup Logging
-        base_log_test_dir = 'testLog/'
-        log_fn = base_log_test_dir + 'logfile.log'
-        err_log_fn = base_log_test_dir + 'eTestLog/ERRORS.log'
-
-        # Ensure log files do not already exist
-        self.assert_not_exists(log_fn)
-        self.assert_not_exists(err_log_fn)
-
-        setup_log(log_fn, error_filename=err_log_fn)
+        base_log_dir, log_fn, err_log_fn = self.start_logging(False)
 
         # Ensure log files are created
         self.assert_exists(log_fn)
@@ -59,4 +51,17 @@ class Test(TestCase):
 
         # Remove directory used for testing
         os.chdir(org_dir)  # Restore original directory before deleting
-        shutil.rmtree(log_dir)
+        shutil.rmtree(base_log_dir)
+        self.assert_not_exists(base_log_dir)
+
+    def start_logging(self, only_std_out: bool) -> Tuple[str, str, str]:
+        base_log_test_dir = 'testLog/'
+        log_fn = base_log_test_dir + 'logfile.log'
+        err_log_fn = base_log_test_dir + 'eTestLog/ERRORS.log'
+
+        # Ensure log files do not already exist
+        self.assert_not_exists(log_fn)
+        self.assert_not_exists(err_log_fn)
+
+        setup_log(log_fn, only_std_out=only_std_out, error_filename=err_log_fn)
+        return base_log_test_dir, log_fn, err_log_fn
