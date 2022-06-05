@@ -74,7 +74,7 @@ class DBCache:
         :return: The value corresponding to the key passed
         """
         if key in self.cache:
-            result = self.cache[key]
+            return self.cache[key]
         else:
             result = self.db_backing.get(key)
 
