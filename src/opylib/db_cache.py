@@ -134,7 +134,10 @@ class DBCache:
         return self._timer_write_out is not None
 
     def keys(self):
+        self.purge()
+        return self.db_backing.keys()
+
+    def purge(self):
         if self.is_write_pending:
             self._timer_write_out.cancel()
             self._write_to_backing()
-        return self.db_backing.keys()
