@@ -135,3 +135,12 @@ def _register_file_logger(fn: str, fmt: str, log_level):
     file_handler.setFormatter(logging.Formatter(fmt))
     file_handler.setLevel(log_level)
     _logger.addHandler(file_handler)
+
+
+def discard_handlers():
+    """
+    Just discards the handlers does not reset the error count
+    :return:
+    """
+    global _logger
+    _logger.handlers.clear()
