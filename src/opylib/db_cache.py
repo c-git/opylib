@@ -23,7 +23,9 @@ class DBCache:
             complete in a single pass (operations are not atomic)
     """
 
-    def __init__(self, db_backing: dict, save_cache_delay: int = 30):
+    def __init__(self, db_backing: dict, save_cache_delay: int = 30,
+                 *, purge_loglevel=logging.DEBUG):
+        self.purge_loglevel = purge_loglevel
         self.save_cache_delay = save_cache_delay
         self.db_backing = db_backing
         self.cache = {}  # Values sent but not written to db yet
@@ -114,7 +116,7 @@ class DBCache:
         ASSUMPTION: Function completes in its entirety without any other
             thread calling any of the other functions
         """
-        log('[DB Cache] Purging', logging.DEBUG)
+        log('[DB Cache] Purging', self.purge_loglevel)
         for key in self.cache.keys():
             value = self.cache[key]
             if key in self.to_yaml:
