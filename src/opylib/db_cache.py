@@ -124,7 +124,7 @@ class DBCache:
             self.db_backing[key] = value
 
         # Register save time and clear timer variable
-        self.last_save_time = datetime.now()
+        self.last_write_time = datetime.now()
         self._timer_write_out = None
 
         # reset cache and to_yaml
