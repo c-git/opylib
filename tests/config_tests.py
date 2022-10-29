@@ -14,4 +14,5 @@ class TestsConfig:
         if self._instance is not None:
             raise Exception("Meant to be singleton but constructed twice")
         self.no_skip: bool = os.getenv("T_NO_SKIP", default=None) is not None
+        self.data_dir = 'data/'
         pass
