@@ -22,8 +22,7 @@ def str_to_class(cls_name: str) -> type:
     """
     Converts a string into the class that it represents
 
-    NB: Code based on https://stackoverflow.com/questions/452969/does-python
-    -have-an-equivalent-to-java-class-forname
+    NB: Code based on https://stackoverflow.com/questions/452969/does-python-have-an-equivalent-to-java-class-forname
     :param cls_name: The string representation of the desired class
     :return: A pointer to the class (Able to be used as a constructor)
     """

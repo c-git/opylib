@@ -10,7 +10,7 @@ def read_file(fn: str, has_header: bool = False, *,
     Reads in a small csv file and returns the contents (Not intended for use
     on large files as the entire file is read into memory)
     :param fn: Filename to load the file from
-    :param has_header: Determines if the file has a header and it should be
+    :param has_header: Determines if the file has a header, and it should be
     extracted from the first line
     :param delimiter: The delimiter to used in the file
     :param quotechar: The quote character used in the file

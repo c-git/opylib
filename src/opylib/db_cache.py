@@ -1,14 +1,17 @@
 import logging
 from datetime import datetime
 
+# noinspection PyPackageRequirements
 import yaml
 
 from opylib.log import log
 from opylib.timer import set_timeout
 
 try:
+    # noinspection PyPackageRequirements
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
+    # noinspection PyPackageRequirements
     from yaml import Loader, Dumper
 
 

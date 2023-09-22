@@ -12,7 +12,7 @@ def change_filename_ext(fn: str, new_ext: str) -> str:
     Returns the filename with the new extension
     :param fn: The filename with the old extension
     :param new_ext: The new extension to put on the filename
-    :return: The filename with the new extension
+    :return: The original filename with the new extension
     """
     result, _ = os.path.splitext(fn)
     return f'{result}{new_ext}'

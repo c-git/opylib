@@ -7,7 +7,7 @@ from opylib.log import log
 
 if sys.platform.startswith('linux'):
     try:
-        # noinspection PyUnresolvedReferences
+        # noinspection PyUnresolvedReferences,PyPackageRequirements
         from google.colab import output
 
 

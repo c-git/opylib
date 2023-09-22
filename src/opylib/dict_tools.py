@@ -1,6 +1,5 @@
 # Most of the dict merging code was taken or based on
-# https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries
-# -in-a-single-expression-taking-union-of-dictiona
+# https://stackoverflow.com/questions/38987/how-do-i-merge-two-dictionaries-in-a-single-expression-taking-union-of-dictiona
 
 
 def merge_dicts(*dict_args):

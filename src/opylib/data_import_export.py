@@ -2,13 +2,16 @@ import logging
 import re
 from typing import Any, List, Type
 
+# noinspection PyPackageRequirements
 import yaml
 
 from opylib.files_folders import ensure_parent_folder_exists
 
 try:
+    # noinspection PyPackageRequirements
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
+    # noinspection PyPackageRequirements
     from yaml import Loader, Dumper
 
 
