@@ -94,6 +94,14 @@ def set_log_level(level):
     _logger.setLevel(level)
 
 
+def have_errors_occurred() -> bool:
+    """
+    Checks if the errors have occurred as per log messages and returns true if there were errors otherwise false
+    :return: True if the errors have occurred
+    """
+    return _ErrorsStats.has_occurred()
+
+
 def _check_error():
     """
     See if any errors occurred and add warning to end of output
